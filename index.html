@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APP WEB</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.21/vue.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
+    <!-- <link rel="stylesheet" href="estilos.css"> -->
+
+ 
+</head>
+<body>
+    <div id="app">
+
+        <!-- <table>
+            <thead>
+                <th>
+                    ID
+                </th>
+                <th>
+                    Nombre
+                </th>
+                <th>
+                    Descripcion
+                </th>
+                <th>
+                    Foto
+                </th>
+                <th>
+                    ACCION
+                </th>
+            </thead>
+            <tbody>
+                <tr v-for="paisaje in paisajes">
+                    <td>
+                        {{paisaje.id}}
+                    </td>
+                    <td>
+                        {{paisaje.nombre}}
+                    </td>
+                    <td>
+                        {{paisaje.descripcion}}
+                    </td>
+                    <td>
+                        <img :src="'img/'+paisaje.foto" width="100">
+                    </td>
+                    <td>
+                        <button @click="edicionPaisaje = true, elegir(paisaje)">
+                            EDITAR
+                        </button>
+                        <button @click="eliminarPaisaje = true, elegir(paisaje)">
+                            ELIMINAR
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table> -->
+
+   
+
+
+       
+
+    </div>
+    <style>
+        
+    </style>
+    <script>
+        var app = new Vue({
+            el: "#app",
+            data: {
+                items: [
+                    { age: 40, first_name: 'Dickerson', last_name: 'Macdonald' },
+                    { age: 21, first_name: 'Larsen', last_name: 'Shaw' },
+                    { age: 89, first_name: 'Geneva', last_name: 'Wilson' },
+                    { age: 38, first_name: 'Jami', last_name: 'Carney' }
+                ]
+            },
+            mounted: function() {
+               this.consultar()
+            },
+            methods:{
+                consultar() {
+                    axios.get("http://localhost/proyectos/ProyectoVue/conexion/api.php?accion=mostrar")
+                    .then(function(response){
+                        console.log(response.data);
+                    })
+                }
+            }
+        })
+    </script>
+</body>
+</html>
