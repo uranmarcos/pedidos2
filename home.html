@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APP WEB</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.21/vue.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
+  
+ 
+</head>
+<body>
+    <div id="app">
+        <div class="container">
+            <div class="row">
+              <div class="col-md-6 col-sm-10">
+                <div class="opciones" @click="irA('usuarios')">
+                    Usuarios
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-10"  @click="irA('articulos')">
+                <div class="opciones">
+                    Articulos
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-10"  @click="irA('sedes')">
+                <div class="opciones">
+                    Sedes
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+
+    <style scoped>
+        .opciones{
+            border: solid 1px purple;
+            border-radius: 10px;
+            color: purple;
+            text-transform: uppercase;
+            width: 200px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+            
+    </style>
+    <script>
+        var app = new Vue({
+            el: "#app",
+            components: {
+                
+            },
+            data: {
+                items: [
+                    { age: 40, first_name: 'Dickerson', last_name: 'Macdonald' },
+                    { age: 21, first_name: 'Larsen', last_name: 'Shaw' },
+                    { age: 89, first_name: 'Geneva', last_name: 'Wilson' },
+                    { age: 38, first_name: 'Jami', last_name: 'Carney' }
+                ]
+            },
+            mounted: function() {
+               this.consultar()
+            },
+            methods:{
+                consultar() {
+                    axios.get("http://localhost/proyectos/pedidos2/conexion/api.php?accion=mostrar")
+                    .then(function(response){
+                        console.log(response.data);
+                    })
+                },
+                irA(param) {
+                    console.log(param)
+                    switch (param) {
+                        case "usuarios":
+                            console.log("usuarios");
+                            window.location.href = 'http://localhost/proyectos/pedidos2/secciones/usuarios.html';         
+                            break;
+                    
+                        case "articulos":
+                            window.location.href = 'http://localhost/proyectos/pedidos2/secciones/articulos.html';         
+                            break;
+
+                        case "sedes":
+                            window.location.href = 'http://localhost/proyectos/pedidos2/secciones/sedes.html';         
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+            }
+        })
+    </script>
+</body>
+</html>

@@ -57,6 +57,10 @@
                 </tr>
             </tbody>
         </table> -->
+
+   
+
+
        
 
     </div>
@@ -66,9 +70,7 @@
     <script>
         var app = new Vue({
             el: "#app",
-            components: {
-                
-            },
+            
             data: {
                 items: [
                     { age: 40, first_name: 'Dickerson', last_name: 'Macdonald' },
@@ -82,7 +84,7 @@
             },
             methods:{
                 consultar() {
-                    axios.get("http://localhost/proyectos/pedidos2/conexion/api.php?accion=mostrar")
+                    axios.get("http://localhost/proyectos/ProyectoVue/conexion/api.php?accion=mostrar")
                     .then(function(response){
                         console.log(response.data);
                     })
