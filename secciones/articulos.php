@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APP WEB</title>
+    <title>PEDIDOS</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.21/vue.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
     <!-- CSS only -->
@@ -14,20 +14,21 @@
 
 </head>
 <body>
-
+    
     <div id="app">
 
-        <nav class="nav d-flex justify-content-center opciones">
-            <a class="nav-link active" aria-current="page" href="usuarios.html">Usuarios</a>
-            <a class="nav-link" href="sedes.html">Sedes</a>
+        <!-- <nav class="nav d-flex justify-content-center opciones">
+            <a class="nav-link" href="usuarios.html">Usuarios</a>
+            <a class="nav-link active" aria-current="page" href="sedes.html">Sedes</a>
             <a class="nav-link" href="articulos.html">Articulos</a>
             <a class="nav-link" href="pedidos.html">Pedidos</a>
-        </nav>
-        
+        </nav> -->
+        <?php require("../shared/opciones.php")?>
+
         <div class="container">
             
             <button class="botonNuevo">
-                Nuevo Usuario
+                Nuevo articulo
             </button>
             
             
@@ -38,31 +39,31 @@
                             ID
                         </th>
                         <th>
-                            Nombre
+                            Provincia
                         </th>
                         <th>
-                            Apellido
+                            Localidad
                         </th>
                         <th>
-                            Sede
+                            Casas
                         </th>
                         <th style="width: 150px">
                             ACCION
                         </th>
                     </thead>
-                    <tbody v-if="usuarios.length != 0">
-                        <tr v-for="usuario in usuarios">
+                    <tbody v-if="sedes.length != 0">
+                        <tr v-for="sede in sedes">
                             <td>
-                                {{usuario.id}}
+                                {{sede.id}}
                             </td>
                             <td>
-                                {{usuario.nombre}}
+                                {{sede.provincia}}
                             </td>
                             <td>
-                                {{usuario.apellido}}
+                                {{sede.localidad}}
                             </td>
                             <td>
-                                {{usuario.sede}}
+                                {{sede.casas}}
                             </td>
                             <td>
                                 <button class="botonAccion botonEdit" @click="editarUsuario = true, elegir(usuario)">
@@ -84,7 +85,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <div v-if="usuarios.length == 0">
+                <div v-if="sedes.length == 0">
                     <span class="sinResultados">
                        NO SE ENCONTRÓ RESULTADOS PARA MOSTRAR
                     </span>
@@ -93,6 +94,8 @@
         </div>
         <boton-contador></boton-contador>
     </div>
+   
+     
 
     <style>
         .opciones a{
@@ -115,18 +118,25 @@
         }
     </style>
     <script>
-
+        Vue.component("boton-contador", {
+            data() {
+                return {
+                    contador: 0
+                }
+            },
+            template: "<button>Contador</button>"
+        })
         var app = new Vue({
             el: "#app",
             components: {
                 
             },
             data: {
-                usuarios: [
-                    { id: 1, nombre: 'Dickerson', apellido: 'Macdonald', sede: "Córdoba" },
-                    { id: 2, nombre: 'Larsen', apellido: 'Shaw', sede: "Córdoba" },
-                    { id: 3, nombre: 'Geneva', apellido: 'Wilson', sede: "Córdoba" },
-                    { id: 4, nombre: 'Jami', apellido: 'Carney', sede: "Córdoba" }
+                sedes: [
+                    { id: 1, provincia: 'Córdoba', localidad: 'Córdoba', casas: 2 },
+                    { id: 2, provincia: 'La Rioja', localidad: 'La Rioja', casas: 1 },
+                    { id: 3, provincia: 'Santiago del estero', localidad: 'Santiago del estero', casas: 3 },
+                    { id: 4, provincia: 'Catamarca', localidad: 'Catamarca  ', casas: 1 }
                 ]
             },
             mounted: function() {

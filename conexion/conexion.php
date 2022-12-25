@@ -13,12 +13,74 @@ class ApptivaDB {
     }
 
     public function insertar($tabla, $datos) {
-        $resultado = $this->conexion->query("INSERT INTO $tabla VALUES(null, $datos)") or die($this->conexion->error);
-        if ($resultado) {
+        // $resultado = $this->conexion->query("INSERT INTO $tabla VALUES(null, $datos)") or die($this->conexion->error);
+        // if ($resultado) {
+        //     return true;
+        // }
+        // return false;
+        try {
+            $resultado = $this->conexion->query("INSERT INTO $tabla VALUES(null, $datos)") or die();
             return true;
+        } catch (\Throwable $th) {
+            return false;
         }
-        return false;
     }
+
+    public function consultar($tabla, $condicion) {
+        // $resultado = $this->conexion->query("SELECT * FROM $tabla WHERE $condicion") or die($this->conexion->error);
+        // if ($resultado) 
+        //     return $resultado->fetch_all(MYSQLI_ASSOC);
+        // return false;
+        try {
+            $resultado = $this->conexion->query("SELECT * FROM $tabla WHERE $condicion") or die();
+            return $resultado->fetch_all(MYSQLI_ASSOC);
+        } catch (\Throwable $th) {
+            return false;
+        }
+    }
+
+    public function actualizar($tabla, $campos, $condicion) {
+        try {
+            $resultado = $this->conexion->query("UPDATE $tabla SET $campos WHERE $condicion") or die();
+            return true;
+        } catch (\Throwable $th) {
+            return false;
+        }
+    }
+
+    public function existeSede($tabla, $condicion) {
+        try {
+            $resultado = $this->conexion->query("SELECT * FROM $tabla WHERE $condicion") or die();
+            $resultado = $resultado->fetch_all(MYSQLI_ASSOC);
+            $numero = count($resultado);
+            return $numero;
+        } catch (\Throwable $th) {
+            return false;
+        }
+    }
+
+    public function eliminar($tabla, $condicion) {
+        // $resultado = $this->conexion->query("DELETE FROM $tabla WHERE $condicion") or die($this->conexion->error);
+        // if ($resultado) {
+        //     return true;
+        // }
+        // return false;
+
+        try {
+            $resultado = $this->conexion->query("DELETE FROM $tabla WHERE $condicion") or die();
+            return true;
+        } catch (\Throwable $th) {
+            return false;
+        }
+
+    }
+    // public function insertar($tabla, $datos) {
+    //     $resultado = $this->conexion->query("INSERT INTO $tabla VALUES(null, $datos)") or die($this->conexion->error);
+    //     if ($resultado) {
+    //         return true;
+    //     }
+    //     return false;
+    // }
 
     public function borrar($tabla, $condicion) {
         $resultado = $this->conexion->query("DELETE FROM $tabla WHERE $condicion") or die($this->conexion->error);
@@ -28,13 +90,13 @@ class ApptivaDB {
         return false;
     }
 
-    public function actualizar($tabla, $campos, $condicion) {
-        $resultado = $this->conexion->query("UPDATE $tabla SET $campos WHERE $condicion") or die($this->conexion->error);
-        if ($resultado) {
-            return true;
-        }
-        return false;
-    }
+    // public function actualizar($tabla, $campos, $condicion) {
+    //     $resultado = $this->conexion->query("UPDATE $tabla SET $campos WHERE $condicion") or die($this->conexion->error);
+    //     if ($resultado) {
+    //         return true;
+    //     }
+    //     return false;
+    // }
 
     public function buscar($tabla, $condicion) {
         $resultado = $this->conexion->query("SELECT * FROM $tabla WHERE $condicion") or die($this->conexion->error);
