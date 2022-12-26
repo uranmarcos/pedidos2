@@ -48,7 +48,7 @@ class ApptivaDB {
         }
     }
 
-    public function existeSede($tabla, $condicion) {
+    public function hayRegistro($tabla, $condicion) {
         try {
             $resultado = $this->conexion->query("SELECT * FROM $tabla WHERE $condicion") or die();
             $resultado = $resultado->fetch_all(MYSQLI_ASSOC);
