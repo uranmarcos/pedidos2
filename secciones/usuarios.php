@@ -139,7 +139,7 @@
                                         <path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828l6.879-6.879zm.66 11.34L3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293l.16-.16z"/>
                                     </svg>
                                 </button>
-                                <button class="botonAccion botonReset" @click="eliminarUsuario = true, elegir(usuario)">
+                                <button class="botonAccion botonReset" @click="reset(usuario)">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-key-fill" viewBox="0 0 16 16">
                                         <path d="M3.5 11.5a3.5 3.5 0 1 1 3.163-5H14L15.5 8 14 9.5l-1-1-1 1-1-1-1 1-1-1-1 1H6.663a3.5 3.5 0 0 1-3.163 2zM2.5 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
                                     </svg>
@@ -176,16 +176,18 @@
                             <br>
                             Apellido: {{app.primerApellido}} {{app.segundoApellido}}
                             <br>
-                            Dni: {{app.dni}}
-                            <br>
-                            Sede: {{sedes.filter(element => element.id == app.sede)[0]["provincia"]}} - {{sedes.filter(element => element.id == app.sede)[0]["localidad"]}}
-                            <br>
-                            Mail: {{app.mail}}
+                            <div v-if="accionModal != 'resetear la contraseña'">
+                                Dni: {{app.dni}}
+                                <br>
+                                Sede: {{sedes.filter(element => element.id == app.sede)[0]["provincia"]}} - {{sedes.filter(element => element.id == app.sede)[0]["localidad"]}}
+                                <br>
+                                Mail: {{app.mail}}
+                            </div>
                         </div>
                         
                         <div class="row d-flex justify-content-around">
                             <div class="col-sm-12 col-md-6 d-flex justify-content-center">
-                                <button type="button" @click="modal=false" class="btn boton" >Cancelar</button>
+                                <button type="button" @click="cancelarModal()" class="btn boton" >Cancelar</button>
                             </div>
 
                             <div class="col-sm-12 col-md-6 d-flex justify-content-center mt-sm-3 mt-md-0">
@@ -210,6 +212,15 @@
                                 <!-- BOTONES CONFIRMACION ELIMINACION -->
                                 <button type="button" @click="confirmarEliminacion()" class="btn botonConfirm" v-if="accionModal == 'eliminar' && !eliminando">Eliminar</button>
                                 <button type="button" class="btn botonConfirm" v-if="accionModal == 'eliminar' && eliminando">
+                                    <div class="spinner-border" role="status">
+                                        <span class="sr-only"></span>
+                                    </div>
+                                </button>
+                                <!-- BOTONES CONFIRMACION ELIMINACION -->
+
+                                <!-- BOTONES CONFIRMACION ELIMINACION -->
+                                <button type="button" @click="confirmarReseteo()" class="btn botonConfirm" v-if="accionModal == 'resetear la contraseña' && !reseteando">Eliminar</button>
+                                <button type="button" class="btn botonConfirm" v-if="accionModal == 'resetear la contraseña' && reseteando">
                                     <div class="spinner-border" role="status">
                                         <span class="sr-only"></span>
                                     </div>
@@ -437,6 +448,7 @@
                 //
                 confirm: false,
                 eliminando: false,
+                reseteando: false,
                 editando: false,
                 creando: false,
                 usuarios: [],
@@ -450,23 +462,42 @@
                 editar (usuario) {
                     app.editable = true;
                     app.mostrarABM = true;
-                    app.provincia = usuario.provincia;
-                    app.localidad = usuario.localidad;
                     app.idUsuario = usuario.id;
-                    app.casas = usuario.casas;
+                    app.primerNombre = usuario.nombre;
+                    app.segundoNombre = usuario.segundoNombre;
+                    app.primerApellido = usuario.apellido;
+                    app.segundoApellido = usuario.segundoApellido;
+                    app.sede = usuario.sede;
+                    app.dni = usuario.dni;
+                    app.mail = usuario.mail;
                 },
                 eliminar (usuario) {
                     app.mostrarABM = false;
                     app.modal = true;
-                    app.accionModal = "eliminar";
-                    app.provincia = usuario.provincia;
-                    app.localidad = usuario.localidad;
                     app.idUsuario = usuario.id;
-                    app.casas = usuario.casas;
+                    app.accionModal = "eliminar";
+                    app.primerNombre = usuario.nombre;
+                    app.segundoNombre = usuario.segundoNombre;
+                    app.primerApellido = usuario.apellido;
+                    app.segundoApellido = usuario.segundoApellido;
+                    app.dni = usuario.dni;
+                    app.sede = usuario.sede;
+                    app.mail = usuario.mail;
+                },
+                reset (usuario) {
+                    app.mostrarABM = false;
+                    app.modal = true;
+                    app.idUsuario = usuario.id;
+                    app.accionModal = "resetear la contraseña";
+                    app.primerNombre = usuario.nombre;
+                    app.segundoNombre = usuario.segundoNombre;
+                    app.primerApellido = usuario.apellido;
+                    app.segundoApellido = usuario.segundoApellido;
                 },
                 cancelarABM(){
                     this.limpiarErrores()
                     app.mostrarABM = false;
+                    app.idUsuario = null;
                     app.primerNombre = null;
                     app.segundoNombre = null;
                     app.primerApellido = null;
@@ -474,6 +505,9 @@
                     app.dni = null;
                     app.sede = null;
                     app.mail = null;
+                },
+                cancelarModal(){
+                    app.modal = false;
                 },
                 limpiarErrores () {
                     document.getElementById("primerNombre").classList.remove("errorInput");
@@ -696,8 +730,14 @@
                     app.editando = true;
                     let formdata = new FormData();
                     formdata.append("id", app.idUsuario);
-                    formdata.append("casas", app.casas);
-                    axios.post("http://localhost/proyectos/pedidos2/conexion/api.php?accion=editarSede", formdata)
+                    formdata.append("nombre", app.primerNombre);
+                    formdata.append("segundoNombre", app.segundoNombre);
+                    formdata.append("apellido", app.primerApellido);
+                    formdata.append("segundoApellido", app.segundoApellido);
+                    formdata.append("dni", app.dni);
+                    formdata.append("sede", app.sede);
+                    formdata.append("mail", app.mail);
+                    axios.post("http://localhost/proyectos/pedidos2/conexion/api.php?accion=editarUsuario", formdata)
                     .then(function(response){
                         if (response.data.error) {
                             app.mostrarToast("Error", response.data.mensaje);
@@ -706,9 +746,13 @@
                             app.modal = false;
                             app.mostrarABM = false;
                             app.idUsuario= null;
-                            app.provincia = null;
-                            app.localidad = null;
-                            app.casas = null;
+                            app.primerNombre = null;
+                            app.segundoNombre = null;
+                            app.primerApellido = null;
+                            app.segundoApellido = null;
+                            app.dni = null;
+                            app.mail = null;
+                            app.sede = null;
                             app.consultarUsuarios();
                         }
                         app.editando = false;
@@ -739,16 +783,7 @@
                     app.eliminando = true;
                     let formdata = new FormData();
                     formdata.append("id", app.idUsuario);
-                    axios.post("http://localhost/proyectos/pedidos2/conexion/api.php?accion=eliminarSede", formdata)
-                    // .then(function(response){
-                    //     app.modal = false;
-                    //     app.eliminando = false;
-                    //     app.idUsuario= null;
-                    //     app.provincia = null;
-                    //     app.localidad = null;
-                    //     app.casas = null;
-                    //     app.consultarUsuarios();
-                    // })
+                    axios.post("http://localhost/proyectos/pedidos2/conexion/api.php?accion=eliminarUsuario", formdata)
                     .then(function(response){
                         if (response.data.error) {
                             app.mostrarToast("Error", response.data.mensaje);
@@ -756,9 +791,13 @@
                             app.mostrarToast("Éxito", response.data.mensaje);
                             app.modal = false;
                             app.idUsuario= null;
-                            app.provincia = null;
-                            app.localidad = null;
-                            app.casas = null;
+                            app.primerNombre = null;
+                            app.segundoNombre = null;
+                            app.primerApellido = null;
+                            app.segundoApellido = null;
+                            app.dni = null;
+                            app.mail = null;
+                            app.sede = null;
                             app.consultarUsuarios();
                         }
                         app.eliminando = false;
