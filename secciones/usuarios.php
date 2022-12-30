@@ -10,16 +10,27 @@
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link href="../css/tabla.css" rel="stylesheet">
+    <link href="../css/opciones.css" rel="stylesheet">
+    <link href="../css/modal.css" rel="stylesheet">
     
-
 </head>
 <body>
     
     <div id="app">
 
-        <?php require("../shared/opciones.php")?>
+        <?php require("../shared/header.html")?>
 
         <div class="container">
+
+            <div class="breadcrumb">
+                <span>
+                    INICIO - USUARIOS
+                </span>
+
+                <button type="button" @click="mostrarABM=true, editable = false" class="btn boton" v-if="!mostrarABM">
+                    Nuevo Usuario
+                </button>
+            </div>
         
             <!-- START COMPONENTE ABM usuarios -->
             <div class="cardABM" v-if="mostrarABM">
@@ -62,12 +73,6 @@
                 </div>
             </div>
             <!-- END COMPONENTE ABM USUARIOS -->
-
-            <!-- START BOTON NUEVA USUARIO -->
-            <button type="button" @click="mostrarABM=true, editable = false" class="btn boton" v-if="!mostrarABM">
-                Nuevo Usuario
-            </button>
-            <!-- START BOTON NUEVA USUARIO -->
             
             <!-- START COMPONENTE LOADING BUSCANDO USUARIOS -->
             <div class="contenedorLoading" v-if="buscandoUsuarios">
@@ -363,59 +368,6 @@
         }
         /* ESTILOS LOADING */
 
-
-      
-
-        /* ESTILOS OPCIONES */
-        .opciones a{
-            height: 30px;
-            margin: 20px 0 20px;
-        }
-        .opciones a{
-            color: rgb(107, 69, 142);
-            font-weight: bolder;
-            display: flex;
-            align-items: center;
-        }
-        .opciones a:hover{
-            color: white;
-            border-radius: 3px;
-            background-color: rgb(107, 69, 142);
-        }
-        .active{
-            border-bottom: 1px solid rgb(107, 69, 142);; 
-        }
-        /* ESTILOS OPCIONES */
-
-
-
-        /*  ESTILOS MODAL   */
-        .tituloModal{
-            color: rgb(107, 69, 142);
-        }
-        /* The Modal (background) */
-        .modal {
-            display: block;
-            /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgb(0,0,0); /* Fallback color */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-        }
-
-        /* Modal Content/Box */
-        .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto; /* 15% from the top and centered */
-            padding: 20px;
-            border: 1px solid #888;
-            width: 40%; /* Could be more or less, depending on screen size */
-        }
     </style>
     <script>
 
