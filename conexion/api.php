@@ -4,7 +4,7 @@
 
     $accion = "mostrar";
     $res = array("error" => false);
-    if(isset($_GET["accion"])) {
+    if (isset($_GET["accion"])) {
         $accion = $_GET["accion"];
     }
 
@@ -206,54 +206,94 @@
 
 
         // START CASOS ABM ARTICULOS
-        case 'insertarArticulo':
-            $descripcion       = $_POST["descripcion"];
-            $categoria      = $_POST["categoria"];
-            $medida     = $_POST["medida"];
+            case 'insertarArticulo':
+                $descripcion       = $_POST["descripcion"];
+                $categoria      = $_POST["categoria"];
+                $medida     = $_POST["medida"];
 
-            $data = "'" . $descripcion . "', '" . $categoria . "', '" . $medida .  "', 1" ;
-            $u = $user -> insertar("articulos", $data);
-                
-            if ($u) { 
-                $res["mensaje"] = "La creación se realizó correctamente";
-            } else {
-                $res["mensaje"] = "La creación no pudo realizarse";
-                $res["error"] = true;
-            } 
-        break;
+                $data = "'" . $descripcion . "', '" . $categoria . "', '" . $medida .  "', 1" ;
+                $u = $user -> insertar("articulos", $data);
+                    
+                if ($u) { 
+                    $res["mensaje"] = "La creación se realizó correctamente";
+                } else {
+                    $res["mensaje"] = "La creación no pudo realizarse";
+                    $res["error"] = true;
+                } 
+            break;
 
-        case 'consultarArticulos':
-            $u = $user -> consultar("articulos", 1);
-                
-            $res["mensaje"] =$u;
-            //break;
+            case 'consultarArticulos':
+                $u = $user -> consultar("articulos", 1);
+                    
+                $res["mensaje"] =$u;
+                //break;
 
-            if ($u) { 
-                $res["articulos"] = $u;
-                $res["mensaje"] = "La consulta se realizó correctamente";
-            } else {
-                $res["mensaje"] = "No se pudo recuperar los articulos";
-                $res["error"] = true;
-            } 
-        break;
+                if ($u) { 
+                    $res["articulos"] = $u;
+                    $res["mensaje"] = "La consulta se realizó correctamente";
+                } else {
+                    $res["mensaje"] = "No se pudo recuperar los articulos";
+                    $res["error"] = true;
+                } 
+            break;
 
-        case 'editarArticulo':
-            $id             = $_POST["id"];
-            $descripcion    = $_POST["descripcion"];
-            $categoria      = $_POST["categoria"];
-            $medida         = $_POST["medida"];
-            $vigente         = $_POST["vigente"];
+            case 'editarArticulo':
+                $id             = $_POST["id"];
+                $descripcion    = $_POST["descripcion"];
+                $categoria      = $_POST["categoria"];
+                $medida         = $_POST["medida"];
+                $vigente         = $_POST["vigente"];
 
-            $data = "descripcion = '" . $descripcion . "', categoria = '" . $categoria . "', medida = '" . $medida . "', vigente = '" . $vigente . "'";
-            $u = $user -> actualizar("articulos", $data, "id = " . $id);        
-                
-            if ($u) { 
-                $res["mensaje"] = "La modificación se realizó correctamente";
-            } else {
-                $res["mensaje"] = "La modificación no pudo realizarse";
-                $res["error"] = true;
-            } 
-        break;
+                $data = "descripcion = '" . $descripcion . "', categoria = '" . $categoria . "', medida = '" . $medida . "', vigente = '" . $vigente . "'";
+                $u = $user -> actualizar("articulos", $data, "id = " . $id);        
+                    
+                if ($u) { 
+                    $res["mensaje"] = "La modificación se realizó correctamente";
+                } else {
+                    $res["mensaje"] = "La modificación no pudo realizarse";
+                    $res["error"] = true;
+                } 
+            break;
+        // END CASOS ABM ARTICULOS
+
+        // START CASOS GENERAR PEDIDO
+            case 'generarPedido':
+                $sede       = $_POST["sede"];
+                $usuario    = $_POST["usuario"];
+                $pedido     = $_POST["pedido"];
+
+                $data = "'" . $sede . "', '" . $usuario . "', '" . $pedido . "', " . 'NOW()' .  ", 0";
+                $u = $user -> insertar("pedidos", $data);
+
+                if ($u) { 
+                    $res["mensaje"] = "El pedido se generó correctamente";
+                } else {
+                    $res["mensaje"] = "El pedido no pudo realizarse";
+                    $res["error"] = true;
+                } 
+            break;
+
+            case 'consultarPedidos':
+                $u = $user -> consultarPedidos("pedidos", 1);
+                    
+                $res["mensaje"] =$u;
+
+                if ($u) { 
+                    $res["pedidos"] = $u;
+                    $res["mensaje"] = "La consulta se realizó correctamente";
+                } else {
+                    $res["mensaje"] = "No se pudo recuperar los pedidos";
+                    $res["error"] = true;
+                } 
+            break;
+
+
+
+        // END CASOS GENERAR PEDIDO
+
+
+
+
 
         ////
         ////

@@ -39,6 +39,22 @@ class ApptivaDB {
         }
     }
 
+    public function consultarPedidos($tabla, $condicion) {
+        try {
+            $resultado = $this->conexion->query("SELECT P.pedido, P.fecha, P.enviado,
+            CONCAT(S.localidad, ' - ', S.provincia) sede,
+            CONCAT(U.nombre, ' ', U.segundoNombre, ' ', U.apellido, ' ', U.segundoApellido) usuario
+            FROM pedidos P 
+            LEFT JOIN sedes S ON P.sede = S.id
+            LEFT JOIN usuarios U ON P.usuario = U.id
+            WHERE $condicion
+            ORDER BY fecha DESC") or die();
+            return $resultado->fetch_all(MYSQLI_ASSOC);
+        } catch (\Throwable $th) {
+            return false;
+        }
+    }
+
     public function actualizar($tabla, $campos, $condicion) {
         try {
             $resultado = $this->conexion->query("UPDATE $tabla SET $campos WHERE $condicion") or die();
@@ -81,6 +97,15 @@ class ApptivaDB {
     //     }
     //     return false;
     // }
+    public function login($usuario, $password) {
+        try {
+            $resultado = $this->conexion->query("SELECT * FROM usuario WHERE dni = $usuario;") or die();
+            return $resultado->fetch_all(MYSQLI_ASSOC);
+        } catch (\Throwable $th) {
+            return false;
+        }
+    }
+
 
     public function borrar($tabla, $condicion) {
         $resultado = $this->conexion->query("DELETE FROM $tabla WHERE $condicion") or die($this->conexion->error);

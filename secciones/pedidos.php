@@ -41,56 +41,104 @@
                 </div>
             </div>
             <!-- END COMPONENTE LOADING BUSCANDO PEDIDOS -->
-
+           
             <!-- START TABLA PEDIDOS -->
             <div class="contenedorTabla" v-else>
-                <table class="table table-hover">
-                    <thead class="tituloColumna">
-                        <th>
-                            ID
-                        </th>
-                        <th>
-                            Sede
-                        </th>
-                        <th>
-                            Fecha
-                        </th>
-                        <th>
-                            Enviado
-                        </th>
-                        <th style="width: 150px">
-                            ACCIONES
-                        </th>
-                    </thead>
-                    <tbody v-if="pedidos.length != 0">
-                        <tr v-for="pedido in pedidos">
-                            <td>
-                                {{pedido.id}}
-                            </td>
-                            <td>
-                            {{pedido.usuario}} - {{pedido.usuario}}
-                            </td>
-                            <td>
-                                {{pedido.fecha}}
-                            </td>
-                            <td>
-                                {{pedido.enviado}}
-                            </td>
-                            <td>
-                                <button class="botonAccion botonEdit" @click="ver(pedido)">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
-                                        <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
-                                    </svg>
-                                </button>
-                                <button class="botonAccion botonEdit" @click="descargar(pedido)">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
-                                        <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
-                                    </svg>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="alert alert-dark" role="alert">
+                    Transcurridos los 4 meses desde su envio, el pedido será eliminado. Si lo desea puede descargarlo para futuras consultas.
+                </div>
+                <div class="d-none d-sm-none d-md-block">
+                    <table class="table table-hover ">
+                        <thead class="tituloColumna">
+                            <th class="hide">
+                                ID
+                            </th>
+                            <th>
+                                Sede
+                            </th>
+                            <th>
+                                Usuario
+                            </th>
+                            <th>
+                                Fecha
+                            </th>
+                            <th>
+                                Enviado
+                            </th>
+                            <th style="width: 150px">
+                                ACCIONES
+                            </th>
+                        </thead>
+                        <tbody v-if="pedidos.length != 0">
+                            <tr v-for="pedido in pedidos">
+                                <td class="hide">
+                                    {{pedido.id}}
+                                </td>
+                                <td>
+                                    {{pedido.sede}}
+                                </td>
+                                <td>
+                                    {{pedido.usuario}}
+                                </td>
+                                <td>
+                                    <span v-html="formatDate(pedido.fecha)" class="spanFecha"></span>
+                                </td>
+                                <td>
+                                    {{pedido.enviado != 0 ? "Sí" : "No"}}
+                                </td>
+                                <td>
+                                    <button class="botonAccion botonEdit" @click="ver(pedido)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                                            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+                                        </svg>
+                                    </button>
+                                    <button class="botonAccion botonEdit" @click="descargar(pedido)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-arrow-down" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z"/>
+                                        </svg>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class=" d-block d-sm-block d-md-none">
+                    <table class="table table-hover">
+                        <div v-if="pedidos.length != 0">
+                            <div v-for="pedido in pedidos" style="color: black; margin-left: 20px; border-bottom: 1px solid grey; margin-right: 20px; padding-bottom: 10px; padding-top: 10px;">
+                                <div class="hide">
+                                    {{pedido.id}}
+                                </div>
+                                <div>
+                                    Sede: {{pedido.sede}}
+                                </div>
+                                <div>
+                                    Usuario: {{pedido.usuario}}
+                                </div>
+                                <div>
+                                    Fecha: <span v-html="formatDate(pedido.fecha)" class="spanFecha"></span>
+                                </div>
+                                <div>
+                                    Enviado: {{pedido.enviado != 0 ? "Sí" : "No"}}
+                                </div>
+                                <div>
+                                    <button class="botonAccion botonEdit" @click="ver(pedido)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                                            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+                                        </svg>
+                                    </button>
+                                    <button class="botonAccion botonEdit" @click="descargar(pedido)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-arrow-down" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </table>
+                </div>
                 <div v-if="pedidos.length == 0">
                     <span class="sinResultados">
                        NO SE ENCONTRÓ RESULTADOS PARA MOSTRAR
@@ -174,6 +222,27 @@
 
     </div>
     <style>
+        .hide{
+            display: none;
+        }
+        .fecha {
+            height: 20px;
+            line-height: 20px;
+        }
+        .spanFecha{
+            height: 100% !important;
+            margin: auto;
+        }
+        td{
+            height: 40px !important;
+        }
+        .alert-dark{
+            padding: 8px 16px;
+            font-size: 14px;
+            text-align: center;
+            border: none;
+            border-radius: 10px 10px 0 0;
+        }
         #mitoast {
             visibility: hidden;
             position: fixed;
@@ -302,6 +371,11 @@
                 iniciarPedido () {
                     window.location.href = 'http://localhost/proyectos/pedidos2/secciones/iniciar.php';   
                 },
+                formatDate(fecha) {
+                    var nuevaFecha = "<b><div class='fecha'>" + fecha.split(" ")[0].split("-").reverse().join("-") + "</div></b>";
+                    nuevaFecha = nuevaFecha + "<div class='fecha'>" + fecha.split(" ")[1] + " hs </div>";
+                    return nuevaFecha;
+                },
                 // editar (articulo) {
                 //     app.editable = true;
                 //     app.mostrarABM = true;
@@ -391,11 +465,12 @@
                     this.buscandoPedidos = true;
                     axios.get("http://localhost/proyectos/pedidos2/conexion/api.php?accion=consultarPedidos")
                     .then(function(response){
+                        console.log(response.data);
                         app.buscandoPedidos = false;
                         if (response.data.error) {
                             app.mostrarToast("Error", response.data.mensaje);
                         } else {
-                            app.articulos = response.data.articulos;
+                            app.pedidos = response.data.pedidos;
                         }
                     })
                     

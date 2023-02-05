@@ -19,15 +19,19 @@
     
     <div id="app">
 
-        <?php require("../shared/opciones.php")?>
-
-        <div class="container">
+        <?php require("../shared/header.html")?>
         
-            <!-- START BOTON MIS PEDIDOS -->
-            <button type="button" @click="iniciarPedido()" class="btn boton">
-                Mis pedidos
-            </button>
-            <!-- START BOTON MIS PEDIDOS -->
+        <div class="container">
+            
+            <div class="breadcrumb">
+                <span>
+                    INICIO - GENERAR PEDIDO
+                </span>
+    
+                <button type="button" @click="irAPedidos()" class="btn boton">
+                    Mis pedidos
+                </button>
+            </div>
             
             <!-- START COMPONENTE LOADING BUSCANDO ARTICULOS -->
             <div class="contenedorLoading" v-if="buscandoArticulos">
@@ -71,7 +75,14 @@
                                 </div>
                             </td>
                             <td class="columnaCantidad">
-                                <input class="form-control" type="number" min="0" maxlength="3" @keyup="validarCampo('articulo.id')">
+                                <input 
+                                    class="form-control" 
+                                    @keyup="change(articulo)" 
+                                    type="number" 
+                                    min="0"
+                                    max="999"
+                                    v-model="articulo.value"
+                                >
                             </td>
                             <td class="columnaCategoria">
                                 {{articulo.categoria}}
@@ -79,6 +90,19 @@
                         </tr>
                     </tbody>
                 </table>
+                <div class="row rowOtros">
+                    <div class="col-4">
+                        OTROS
+                    </div>
+                    <div class="col-8 contenedorTextarea">
+                       <textarea v-model="otros" ></textarea>
+                    </div>
+                    <div class="col-12 d-flex justify-content-center">
+                        <button type="button" @click="validarForm()" class="btn boton" :disabled="pedido.length == 0 && otros.trim() == ''">
+                            Generar pedido
+                        </button>
+                    </div>
+                </div>
                 <div v-if="articulos.length == 0">
                     <span class="sinResultados">
                        NO SE ENCONTRÓ RESULTADOS PARA MOSTRAR
@@ -95,47 +119,59 @@
                 <div class="modal-content">
                     <div class="">
                         <div class="row d-flex justify-content-center tituloModal">    
-                            <h5 class="d-flex justify-content-center">CONFIRMACION</h5>
+                            <h5 class="d-flex justify-content-center">CONFIRMACIÓN</h5>
                         </div>
 
-                        <div class="row d-flex justify-content-center my-3">
-                            <b class="d-flex justify-content-center">¿Desea {{accionModal}} el articulo?</b>
-                        </div>
-
-                        <div class="row d-flex justify-content-center my-3">
-                            Descripcion: {{app.descripcion}} 
-                            <br>
-                            Categoria: {{categorias.filter(element => element.id == app.categoria)[0]["descripcion"]}}
-                            <br>
-                            Medida: {{medidas.filter(element => element.id == app.medida)[0]["descripcion"]}}
-                            <br>
-                            Vigente: {{app.vigente == 0 ? "No" : "Sí"}}
-                            <br>
-                        </div>
-                        
-                        <div class="row d-flex justify-content-around">
-                            <div class="col-sm-12 col-md-6 d-flex justify-content-center">
-                                <button type="button" @click="cancelarModal()" class="btn boton" >Cancelar</button>
+                        <div v-if="!generando">
+                            <div class="row d-flex justify-content-center my-3">
+                                <b class="d-flex justify-content-center">¿Desea enviar el pedido?</b>
                             </div>
 
-                            <div class="col-sm-12 col-md-6 d-flex justify-content-center mt-sm-3 mt-md-0">
-                                <!-- BOTONES CONFIRMACION CREACION -->
-                                <button type="button" @click="confirmarCreacion()" class="btn botonConfirm" v-if="accionModal == 'crear' && !creando">Crear</button>
-                                <button type="button" class="btn botonConfirm" v-if="accionModal == 'crear' && creando">
-                                    <div class="spinner-border" role="status">
-                                        <span class="sr-only"></span>
-                                    </div>
-                                </button>
-                                <!-- BOTONES CONFIRMACION CREACION -->
+                                                
+                            <div class="row">
+                                <div class="col-sm-12 d-flex justify-content-center">
+                                    <button type="button" @click="detalle=true" class="btn boton btnRevisar" v-if="!detalle">REVISAR PEDIDO</button>
+                                    <button type="button" @click="detalle=false" class="btn boton btnRevisar" v-else>OCULTAR PEDIDO</button>
+                                </div>
 
-                                <!-- BOTONES CONFIRMACION EDICION -->
-                                <button type="button" @click="confirmarEdicion()" class="btn botonConfirm" v-if="accionModal == 'modificar' && !editando">Editar</button>
-                                <button type="button" class="btn botonConfirm" v-if="accionModal == 'modificar' && editando">
+                                <div v-if="detalle" class="col-sm-12 d-flex justify-content-center ">
+                                    <div class="row detalle">
+                                        <div v-for="(producto, index) in pedido" class="col-sm-6" v-if="(index + 1) <= (pedido.length / 2)">
+                                            {{articulos.filter(element=> element.id == producto.id)[0].descripcion}} : {{producto.cantidad}} {{articulos.filter(element=> element.id == producto.id)[0].medida}}
+                                        </div>
+                                        <div class="col-sm-6" v-else>
+                                            {{articulos.filter(element=> element.id == producto.id)[0].descripcion}} : {{producto.cantidad}} {{articulos.filter(element=> element.id == producto.id)[0].medida}}
+                                        </div>
+                                        <div class="col-12" v-if="otros.trim() != ''">
+                                            Otros: {{otros}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row d-flex justify-content-around mt-3">
+
+                                <div class="col-sm-12 col-md-5 d-flex justify-content-center mt-sm-3 mt-md-0" >
+                                    <button type="button" @click="cancelarModal()" class="btn boton" >Cancelar</button>
+                                </div>
+
+                                <div class="col-sm-12 col-md-5 d-flex justify-content-center mt-sm-3 mt-md-0" >
+                                    <button type="button" @click="confirmarPedido()" class="btn botonConfirm">Confirmar</button>
+                                </div>
+    
+                            </div>
+                        </div>
+
+                        <div v-if="generando">
+                            <div class="row d-flex justify-content-center my-3">
+                                <b class="d-flex justify-content-center">Enviando el pedido...</b>
+                            </div>
+                            <div class="col-sm-12 d-flex justify-content-center mt-sm-3 mt-md-0">
+                                <button type="button" class="btn botonConfirm">
                                     <div class="spinner-border" role="status">
                                         <span class="sr-only"></span>
                                     </div>
                                 </button>
-                                <!-- BOTONES CONFIRMACION EDICION -->
                             </div>
                         </div>
                     </div>
@@ -211,11 +247,6 @@
             border: none;
         }
         .errorInput {
-            /* width: 100%;
-            text-align: center;
-            margin: 10px auto !important;
-            color: red;
-            border: none; */
             border: solid 1px red;
         }
         #mitoast.mostrar {
@@ -296,6 +327,25 @@
             height:20px;
             line-height:20px;
         }
+        .rowOtros{
+            font-size: 16px;
+            margin-top: 10px;
+            font-weight: bolder;
+            margin-left: 10px;
+            text-align: left;
+            height:150px;
+            color: black;
+            line-height:20px;
+            width: 100%;
+            margin:auto;
+        }
+        .contenedorTextarea{
+            padding-left: 50px;
+        }
+        textarea{
+            width: 100%;
+            min-height: 50px;
+        }
         input.form-control{
             margin-top: 7px
         }
@@ -311,7 +361,26 @@
         .columnaCategoria{
             width: 30%;
         }
-
+        .btnRevisar{
+            width: 100%;
+        }
+        .detalle{
+            width: 100%;
+            margin: 20px 0 0;
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 14px;
+            border: solid 1px black;
+        }
+        textarea{
+            padding: 10px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: solid 1px #ced4da;
+        }
+        textarea:focus{
+            outline: none;
+        }
     </style>
     <script>
 
@@ -327,7 +396,7 @@
                 buscandoArticulos: false,
                 //
                 confirm: false,
-                enviando: false,
+                generando: false,
                 articulos: [],
                 medidas: [
                     {
@@ -358,17 +427,82 @@
                         id: "ro",
                         descripcion: "Rollos"
                     }
-                ]
+                ],
+                pedido: [],
+                detalle: false,
+                otros: ""
             },
             mounted: function() {
                 this.consultarArticulos();
             },
             methods:{
-                iniciarPedido () {
-                    window.location.href = 'http://localhost/proyectos/pedidos2/secciones/iniciar.php';   
+                irAPedidos () {
+                    window.location.href = 'http://localhost/proyectos/pedidos2/secciones/pedidos.php';   
+                },
+                validarForm () {
+                    if (this.pedido.length != 0 || this.otros.trim() != '') {
+                        app.modal = true;
+                    }
+                },
+                change (articulo) {
+                    let producto = {
+                        id: articulo.id,
+                        cantidad: articulo.value
+                    }
+                    
+                    let art = this.pedido.find(element => element.id == producto.id);
+                    let posicion = this.pedido.indexOf(art);
+                   
+                    if (posicion >= 0) {
+                        if (producto.cantidad != '') {
+                            this.pedido[posicion] = producto
+                        } else {
+                            this.pedido.splice(posicion, 1)
+                        }
+                    } else {
+                        this.pedido.push(producto);
+                    }
                 },
                 cancelarModal(){
                     app.modal = false;
+                },
+                confirmarPedido () {
+                    app.generando = true;
+
+                    if (this.otros.trim() != '') {
+                        let producto = {
+                            id: 'otros',
+                            cantidad: this.otros
+                        }
+                        this.pedido.push(producto);
+                    }
+                    
+                    const pedid = JSON.stringify(this.pedido);
+                    let formdata = new FormData();
+                    formdata.append("sede", 13);
+                    formdata.append("usuario",1);
+                    formdata.append("pedido", this.pedido);
+
+                    axios.post("http://localhost/proyectos/pedidos2/conexion/api.php?accion=generarPedido", formdata)
+                        .then(function(response){
+                            console.log(response.data);
+                            if (response.data.error) {
+                                app.mostrarToast("Error", response.data.mensaje);
+                            } else {
+                                console.log("se genero");
+                                app.mostrarToast("Éxito", response.data.mensaje);
+                                app.modal = false;
+                                app.pedido = [];
+                                app.otros = '';
+                                setTimeout(() => {
+                                    window.location.href = 'http://localhost/proyectos/pedidos2/secciones/pedidos.php'; 
+                                }, 5000);
+                            }
+                            app.generando = false;
+                        }).catch( error => {
+                            app.generando = false;
+                            app.mostrarToast("Error", response.data.mensaje);
+                        })
                 },
                 // confirmarCreacion () {
                 //     app.creando = true;
@@ -392,36 +526,6 @@
                 //         app.creando = false;
                 //     }).catch( error => {
                 //         app.creando = false;
-                //         app.mostrarToast("Error", response.data.mensaje);
-                //     })
-                // },
-                // confirmarEdicion () {
-                //     app.editando = true;
-                //     let formdata = new FormData();
-                //     formdata.append("id", app.idArticulo);
-                //     formdata.append("categoria", app.categoria);
-                //     formdata.append("descripcion", app.descripcion);
-                //     formdata.append("medida", app.medida);
-                //     formdata.append("vigente", app.vigente);
-                    
-                //     axios.post("http://localhost/proyectos/pedidos2/conexion/api.php?accion=editarArticulo", formdata)
-                //     .then(function(response){
-                //         if (response.data.error) {
-                //             app.mostrarToast("Error", response.data.mensaje);
-                //         } else {
-                //             app.mostrarToast("Éxito", response.data.mensaje);
-                //             app.modal = false;
-                //             app.mostrarABM = false;
-                //             app.idArticulo= null;
-                //             app.descripcion = null;
-                //             app.categoria = null;
-                //             app.medida = null;
-                //             app.vigente = null;
-                //             app.consultarArticulos();
-                //         }
-                //         app.editando = false;
-                //     }).catch( error => {
-                //         app.editando = false;
                 //         app.mostrarToast("Error", response.data.mensaje);
                 //     })
                 // },

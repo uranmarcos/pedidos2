@@ -61,29 +61,20 @@
                     { age: 38, first_name: 'Jami', last_name: 'Carney' }
                 ]
             },
-            mounted: function() {
-               this.consultar()
-            },
             methods:{
-                consultar() {
-                    axios.get("http://localhost/proyectos/pedidos2/conexion/api.php?accion=mostrar")
-                    .then(function(response){
-                        console.log(response.data);
-                    })
-                },
                 irA(param) {
                     console.log(param)
                     switch (param) {
                         case "usuarios":
-                            window.location.href = 'http://localhost/proyectos/pedidos2/secciones/usuarios.html';         
+                            window.location.href = 'http://localhost/proyectos/pedidos2/secciones/usuarios.php';         
                             break;
                     
                         case "articulos":
-                            window.location.href = 'http://localhost/proyectos/pedidos2/secciones/articulos.html';         
+                            window.location.href = 'http://localhost/proyectos/pedidos2/secciones/articulos.php';         
                             break;
 
                         case "sedes":
-                            window.location.href = 'http://localhost/proyectos/pedidos2/secciones/sedes.html';         
+                            window.location.href = 'http://localhost/proyectos/pedidos2/secciones/sedes.php';         
                             break;
 
                         default:
