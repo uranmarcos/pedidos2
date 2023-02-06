@@ -99,7 +99,7 @@ class ApptivaDB {
     // }
     public function login($usuario, $password) {
         try {
-            $resultado = $this->conexion->query("SELECT * FROM usuario WHERE dni = $usuario;") or die();
+            $resultado = $this->conexion->query("SELECT * FROM usuarios WHERE dni = $usuario;") or die();
             return $resultado->fetch_all(MYSQLI_ASSOC);
         } catch (\Throwable $th) {
             return false;

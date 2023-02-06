@@ -19,11 +19,18 @@
     <div class="container">
 
         <div id="app">
-            <div class="col-md-4 col-md-offset-4">
+            <div class="col-md-4">
+
+                <div class="contenedorLogo">
+                    <img 
+                        src="img/logo.jpg" 
+                        alt="logo"  
+                    >
+                </div>
                 
                 <div class="panel panel-primary">
                     <div class="panel-heading d-flex justify-content-center">
-                        <span class="mr-5"></span> <span class="ml-5"> Sí Pedidos</span>
+                        <span class="mr-5"></span> <span class="ml-5"> PEDIDOS</span>
                     </div>
 
                     <div class="panel-body">
@@ -35,9 +42,54 @@
                         <br>
                         <label for="password">
                             Contraseña
-                        </label>
-                        <input type="password" class="form-control" v-model="password">
+                        </label> 
+                        <button @click="changeType()" class="btn-eye">
+                            <svg 
+                                xmlns="http://www.w3.org/2000/svg" 
+                                width="17" 
+                                height="17" 
+                                fill="currentColor" 
+                                class="bi mb-0 bi-eye-fill grey" 
+                                viewBox="0 0 16 16"
+                                v-if="showPasword"    
+                            >
+                                <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                                <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+                            </svg>
+                            <svg 
+                                xmlns="http://www.w3.org/2000/svg" 
+                                width="17" 
+                                height="17" 
+                                fill="currentColor" 
+                                class="bi mb-0 bi-eye-slash-fill grey" 
+                                viewBox="0 0 16 16"
+                                v-if="!showPasword" 
+                            >
+                                <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z"/>
+                                <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z"/>
+                            </svg>
+                        </button>
+                        
+                        <input type="password" id="password" class="form-control" v-model="password">
                         <div class="error">{{errorPassword}}</div>
+                        <div 
+                            class="contenedorRecordar"
+                            @click="changeRecordar()"
+                        >
+                            <input 
+                                type="checkbox" 
+                                id="recordar" 
+                                name="recordar" 
+                                v-model="recordar"
+                                class="mt-0 mr-4"
+                            >
+                            <label 
+                                for="recordar"
+                                class="labelRecordar"
+                            >
+                                Recordar usuario
+                            </label>
+                        </div>
                     </div>
                 
                     <div class="panel-footer">
@@ -85,10 +137,49 @@
 
 
     <style>
+        .purple{
+            color: rgb(124, 69, 153)
+        }
+        .grey{
+            color: rgb(94, 93, 93);
+        }
+        .btn-eye{
+            border: none;
+            background-color: white;
+          
+        }
+        .btn-eye:focus{
+            outline: none !important;
+        }
+        .labelRecordar {
+            margin: 0;
+            padding-left: 8px;
+            width:100%;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+        }
+        .contenedorRecordar{
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+        }
+        .contenedorRecordar:hover{
+            cursor:pointer;
+        }
         .container{
             height: 100vh;
             display: flexbox;
             align-items: center;
+            color: rgb(94, 93, 93);
+        }
+        .contenedorLogo{
+            display: flex;
+            justify-content: center;
+        }
+        img{
+            height: 20vh;
+            margin: 0 auto 20px;
         }
         #app{
             height: 100vh;
@@ -99,18 +190,18 @@
 
         }
         div.panel.panel-primary{
-            border: solid 1px rgb(107, 69, 142);
+            border: solid 1px rgb(124, 69, 153);
         }
         .panel-primary>.panel-heading{
-            border: solid 1px rgb(107, 69, 142) !important;
+            border: solid 1px rgb(124, 69, 153) !important;
         }
         div.panel-heading{
-            background-color: rgb(107, 69, 142) !important;
-            border: solid 1px rgb(107, 69, 142);
+            background-color: rgb(124, 69, 153) !important;
+            border: solid 1px rgb(124, 69, 153);
         }
         .btn-primary{
-            background-color: rgb(107, 69, 142) !important;
-            border: solid 1px rgb(107, 69, 142);
+            background-color: rgb(124, 69, 153) !important;
+            border: solid 1px rgb(124, 69, 153);
         }
         .btn-primary:focus{
             outline: none !important;
@@ -134,8 +225,33 @@
                 loading: false,
                 tituloToast: "",
                 textoToast: "",
+                recordar: false,
+                showPasword: false
+            },
+            mounted () {
+                let usuarioRecordardo = localStorage.getItem("usuario");
+                this.password = "";
+                if (usuarioRecordardo) {
+                    this.usuario = usuarioRecordardo;
+                    this.recordar = true;
+                }
+                if (!this.recordar) {
+                    localStorage.removeItem("usuario");
+                    this.usuario = "";
+                }
+                console.log(localStorage);
             },
             methods:{
+                changeRecordar () {
+                    this.recordar = !this.recordar;
+                    localStorage.removeItem("usuario");
+                },
+                changeType () {
+                    this.showPasword = !this.showPasword
+                    const passwordField = document.querySelector('#password')
+                    if (passwordField.getAttribute('type') === 'password') passwordField.setAttribute('type', 'text')
+                    else passwordField.setAttribute('type', 'password')
+                },
                 ingresar() {
                     this.errorUsuario = null;
                     this.errorPassword = null;
@@ -155,10 +271,14 @@
                         formdata.append("password", app.password);
                         axios.post("http://localhost/proyectos/pedidos2/conexion/login.php?accion=login", formdata)
                         .then(function(response){
-                            console.log(response);
                             if (response.data.error) {
                                 app.mostrarToast("Error", response.data.mensaje);
                             } else {
+                                if (app.recordar) {
+                                    localStorage.setItem("usuario", app.usuario)
+                                } else {
+                                    localStorage.removeItem("usuario", app.usuario)
+                                }
                                 if (response.data.rol == "admin") {
                                     window.location.href = 'http://localhost/proyectos/pedidos2/home.html'; 
                                 } else {

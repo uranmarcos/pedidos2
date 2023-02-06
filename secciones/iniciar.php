@@ -290,8 +290,8 @@
 
         /* ESTILOS LOADING */
         .contenedorLoading {
-            color: rgb(107, 69, 142);
-            border: solid 1px rgb(107, 69, 142);
+            color: rgb(124, 69, 153);
+            border: solid 1px rgb(124, 69, 153);
             border-radius: 10px;
             padding: 10xp;
             margin-top: 24px;
