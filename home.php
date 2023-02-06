@@ -4,16 +4,22 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APP WEB</title>
+    <title>SI PEDIDOS</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.21/vue.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link href="css/tabla.css" rel="stylesheet">
+    <link href="css/opciones.css" rel="stylesheet">
+    <link href="css/modal.css" rel="stylesheet">
   
  
 </head>
 <body>
     <div id="app">
+        <?php require("shared/header.html")?>
+        
         <div class="container">
-            <div class="row">
+            <div class="row mt-6">
               <div class="col-md-6 col-sm-10">
                 <div class="opciones" @click="irA('usuarios')">
                     Usuarios

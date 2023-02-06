@@ -1,3 +1,7 @@
+<?php
+    session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,9 +23,14 @@
     <div id="app">
 
         <?php require("../shared/header.html")?>
-
+        
         <div class="container">
 
+            <div v-if="rol == 'admin'">
+                <?php require("../shared/opciones.html")?>
+            </div>
+           
+            
             <div class="breadcrumb">
                 <span>
                     INICIO - ARTICULOS
@@ -395,10 +404,15 @@
                         id: "ro",
                         descripcion: "Rollos"
                     }
-                ]
+                ],
+                rol: null
             },
             mounted: function() {
                 this.consultarArticulos();
+                this.rol = "<?php echo $_SESSION['rol'] ?>";
+                if (this.rol == 'admin') {
+                    document.getElementById("navArticulos").classList.add("active");
+                }
             },
             methods:{
                 editar (articulo) {

@@ -1,3 +1,7 @@
+<?php
+    session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,6 +25,10 @@
         <?php require("../shared/header.html")?>
 
         <div class="container">
+
+            <div v-if="rol == 'admin'">
+                <?php require("../shared/opciones.html")?>
+            </div>
 
             <div class="breadcrumb">
                 <span>
@@ -404,11 +412,16 @@
                 editando: false,
                 creando: false,
                 usuarios: [],
-                sedes: []
+                sedes: [],
+                rol: null
             },
             mounted: function() {
                 this.consultarUsuarios();
                 this.consultarSedes();
+                this.rol = "<?php echo $_SESSION['rol'] ?>";
+                if (this.rol == 'admin') {
+                    document.getElementById("navUsuarios").classList.add("active");
+                }
             },
             methods:{
                 editar (usuario) {

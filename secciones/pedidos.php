@@ -1,3 +1,7 @@
+<?php
+    session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,6 +25,11 @@
         <?php require("../shared/header.html")?>
 
         <div class="container">
+
+            <div v-if="rol == 'admin'">
+                <?php require("../shared/opciones.html")?>
+            </div>
+
 
             <div class="breadcrumb">
                 <span>
@@ -363,9 +372,14 @@
                 confirm: false,
                 enviando: false,
                 pedidos: [],
+                rol: null
             },
             mounted: function() {
                 this.consultarPedidos();
+                this.rol = "<?php echo $_SESSION['rol'] ?>";
+                if (this.rol == 'admin') {
+                    document.getElementById("navPedidos").classList.add("active");
+                }
             },
             methods:{
                 iniciarPedido () {
